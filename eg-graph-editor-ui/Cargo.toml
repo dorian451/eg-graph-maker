@@ -1,0 +1,14 @@
+[package]
+name = "eg-graph-editor-ui"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+console_error_panic_hook.workspace = true
+leptos = { workspace = true, features = ["csr", "nightly"] }
+tracing.workspace = true
+tracing-error.workspace = true
+tracing-subscriber = { workspace = true, features = ["env-filter"] }
+tracing-subscriber-wasm.workspace = true

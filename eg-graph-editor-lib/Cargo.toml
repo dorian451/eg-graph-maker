@@ -1,0 +1,18 @@
+[package]
+name = "eg-graph-editor-lib"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+fallible-iterator = "0.3.0"
+itertools = "0.12.1"
+nid = "3.0.0"
+thiserror.workspace = true
+tracing.workspace = true
+
+
+[dev-dependencies]
+async-std = { workspace = true, features = ["attributes"] }
+tracing-error.workspace = true
+tracing-subscriber = { workspace = true, features = ["env-filter"] }
+tracing-panic.workspace = true
