@@ -129,23 +129,41 @@ fn iteration_test() -> Result<(), Box<dyn Error>> {
 
     let mut graph = Graph::try_from("[A, [B], []]")?;
 
-    let mut subgraphs = graph.subgraphs_of(graph.root_id())?.iter();
+    let subgraphs: Vec<_> = graph.subgraphs_of(graph.root_id())?.iter().collect();
 
-    let rule = InferenceRule::Iteration {
+    println!("{:?}", subgraphs);
+
+    let rule1 = InferenceRule::Iteration {
+        backwards: false,
         parent: *graph.root_id(),
         parent_atoms: Vec::from([Arc::new(Atom::new("A".to_string()))]),
-        parent_subgraphs: Vec::from([*subgraphs.next().unwrap()]),
-        target: *subgraphs.next().unwrap(),
+        parent_subgraphs: Vec::from([*subgraphs[0]]),
+        target: *subgraphs[1],
+    };
+
+    let rule2 = InferenceRule::Iteration {
+        backwards: true,
+        parent: *subgraphs[0],
+        parent_atoms: Vec::from([Arc::new(Atom::new("B".to_string()))]),
+        parent_subgraphs: vec![],
+        target: *graph.root_id(),
     };
 
     println!("Original:");
     print_graph(&graph);
     println!();
 
-    let actions = rule.gen_actions_from_rule(&graph)?;
-    let actions_rev = Action::apply_actions(actions, &mut graph)?;
+    let actions1 = rule1.gen_actions_from_rule(&graph)?;
+    Action::apply_actions(actions1, &mut graph)?;
 
-    println!("Insertion:");
+    println!("Iteration:");
+    print_graph(&graph);
+    println!();
+
+    let actions2 = rule2.gen_actions_from_rule(&graph)?;
+    Action::apply_actions(actions2, &mut graph)?;
+
+    println!("Deiteration:");
     print_graph(&graph);
     println!();
 

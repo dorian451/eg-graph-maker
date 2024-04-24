@@ -9,6 +9,7 @@ use crate::{
     atom::Atom,
     proof::action::{error::ActionError, Action, GraphTarget},
 };
+use hashlink::{LinkedHashMap, LinkedHashSet};
 use itertools::Itertools;
 use nid::Nanoid;
 use std::{
@@ -19,14 +20,19 @@ use std::{
 };
 use tracing::instrument;
 
+#[cfg(full)]
 const ID_LEN: usize = 10;
+
+#[cfg(not(full))]
+const ID_LEN: usize = 3;
+
 pub type GraphKey = Nanoid<ID_LEN>;
 
 #[derive(Clone)]
 pub struct Graph {
     root_id: GraphKey,
     known_atoms: HashMap<Arc<Atom>, usize>,
-    subgraphs: HashMap<GraphKey, Subgraph>,
+    subgraphs: LinkedHashMap<GraphKey, Subgraph>,
     subgraph_parents: HashMap<GraphKey, GraphKey>,
 }
 
@@ -65,7 +71,7 @@ impl Graph {
     }
 
     #[instrument]
-    pub fn subgraphs_of(&self, target: &GraphKey) -> GraphResult<&HashSet<GraphKey>> {
+    pub fn subgraphs_of(&self, target: &GraphKey) -> GraphResult<&LinkedHashSet<GraphKey>> {
         self.subgraphs
             .get(target)
             .ok_or_else(|| GraphError::InvalidSubgraphTargetError(target.to_string()))
@@ -85,6 +91,25 @@ impl Graph {
             .get(target)
             .ok_or_else(|| GraphError::InvalidSubgraphTargetError(target.to_string()))
             .map(|v| v.level())
+    }
+
+    #[instrument]
+    pub fn is_related_to(&self, higher: &GraphKey, lower: &GraphKey) -> GraphResult<bool> {
+        if !self.subgraphs.contains_key(higher) {
+            Err(GraphError::InvalidSubgraphTargetError(higher.to_string()))?
+        } else if !self.subgraphs.contains_key(lower) {
+            Err(GraphError::InvalidSubgraphTargetError(lower.to_string()))?
+        } else {
+            let current = lower;
+
+            while let Ok(thing) = self.parent_of(current) {
+                if current == higher || thing == higher {
+                    return Ok(true);
+                }
+            }
+
+            Ok(false)
+        }
     }
 
     #[instrument]

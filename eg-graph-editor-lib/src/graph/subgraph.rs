@@ -1,5 +1,6 @@
 use super::GraphKey;
 use crate::atom::Atom;
+use hashlink::LinkedHashSet;
 use std::{collections::HashSet, sync::Arc};
 use tracing::instrument;
 
@@ -7,7 +8,7 @@ use tracing::instrument;
 pub struct Subgraph {
     level: usize,
     atoms: HashSet<Arc<Atom>>,
-    subgraphs: HashSet<GraphKey>,
+    subgraphs: LinkedHashSet<GraphKey>,
 }
 
 impl Subgraph {
@@ -41,12 +42,12 @@ impl Subgraph {
     }
 
     #[instrument]
-    pub fn subgraphs(&self) -> &HashSet<GraphKey> {
+    pub fn subgraphs(&self) -> &LinkedHashSet<GraphKey> {
         &self.subgraphs
     }
 
     #[instrument]
-    pub fn subgraphs_mut(&mut self) -> &mut HashSet<GraphKey> {
+    pub fn subgraphs_mut(&mut self) -> &mut LinkedHashSet<GraphKey> {
         &mut self.subgraphs
     }
 }

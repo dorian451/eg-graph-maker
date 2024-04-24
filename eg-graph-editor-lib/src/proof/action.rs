@@ -47,7 +47,7 @@ impl Action {
     pub fn apply_actions<S: IntoIterator<Item = Self> + Debug>(
         actions: S,
         graph: &mut Graph,
-    ) -> ActionResult<impl IntoIterator<Item = Action> + Debug> {
+    ) -> ActionResult<LinkedList<Action>> {
         let mut reversed_actions = LinkedList::new();
 
         let mut matched_future_targets = HashMap::new();

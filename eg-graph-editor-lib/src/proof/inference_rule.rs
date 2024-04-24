@@ -6,8 +6,8 @@ mod iteration;
 
 use self::{
     double_cut_draw::gen_actions_from_double_cut_draw,
-    double_cut_erase::gen_actions_from_double_cut_erase, insertion::gen_actions_from_insertion,
-    iteration::gen_actions_from_iteration,
+    double_cut_erase::gen_actions_from_double_cut_erase, erasure::gen_actions_from_erasure,
+    insertion::gen_actions_from_insertion, iteration::gen_actions_from_iteration,
 };
 use super::{action::Action, error::ProofResult};
 use crate::{
@@ -48,6 +48,9 @@ pub enum InferenceRule {
         target_atoms: Vec<(GraphKey, Arc<Atom>)>,
     },
     Iteration {
+        /// whether this is iteration (false) or deiteration(true)
+        backwards: bool,
+
         /// the parent subgraph that contains the things we want to include in the iteration
         parent: GraphKey,
 
@@ -58,19 +61,6 @@ pub enum InferenceRule {
         parent_subgraphs: Vec<GraphKey>,
 
         /// where the selected atoms/subgraphs should go
-        target: GraphKey,
-    },
-    Deiteration {
-        /// the parent subgraph that contains the things we want to remove in the deiteration
-        parent: GraphKey,
-
-        /// the atoms we want to include
-        parent_atoms: Vec<Arc<Atom>>,
-
-        /// the subgraphs we want to include
-        parent_subgraphs: Vec<GraphKey>,
-
-        /// where the selected atoms/subgraphs should be deleted from
         target: GraphKey,
     },
 }
@@ -98,23 +88,17 @@ impl InferenceRule {
             } => gen_actions_from_insertion(self, graph),
 
             InferenceRule::Erasure {
-                target_subgraphs,
-                target_atoms,
-            } => todo!(),
+                target_subgraphs: _,
+                target_atoms: _,
+            } => gen_actions_from_erasure(self, graph),
 
             InferenceRule::Iteration {
+                backwards: _,
                 parent: _,
                 parent_atoms: _,
                 parent_subgraphs: _,
                 target: _,
             } => gen_actions_from_iteration(self, graph),
-
-            InferenceRule::Deiteration {
-                parent: _,
-                parent_atoms: _,
-                parent_subgraphs: _,
-                target: _,
-            } => todo!(),
         }
     }
 }

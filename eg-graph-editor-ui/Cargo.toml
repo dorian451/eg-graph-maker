@@ -6,9 +6,20 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
+eg-graph-editor-lib = { path = "../eg-graph-editor-lib" }
+
+async-std.workspace = true
 console_error_panic_hook.workspace = true
 leptos = { workspace = true, features = ["csr", "nightly"] }
+leptos_meta = { workspace = true, features = ["csr", "nightly"] }
+leptos_router = { workspace = true, features = ["csr", "nightly"] }
+leptos-use = { workspace = true, features = ["serde"] }
 tracing.workspace = true
 tracing-error.workspace = true
+tracing-panic.workspace = true
 tracing-subscriber = { workspace = true, features = ["env-filter"] }
 tracing-subscriber-wasm.workspace = true
+wasm-bindgen.workspace = true
+wasm-bindgen-futures.workspace = true
+serde.workspace = true
+ts-rs = "8.1.0"

@@ -1,0 +1,15 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.bg-color-0 {
+  @apply bg-gray-300 dark:bg-zinc-800;
+}
+
+.bg-color-accent {
+  @apply bg-green-300 dark:bg-green-800;
+}
+
+.fg-color-0 {
+  @apply text-zinc-900 dark:text-zinc-200;
+}

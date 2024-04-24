@@ -1,3 +1,5 @@
 .vscode
 **/target
-**/dist
+**/dist*
+**/node_modules
+eg-graph-editor-ui/style/output.css

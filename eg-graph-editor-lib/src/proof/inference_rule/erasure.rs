@@ -1,6 +1,6 @@
 use super::InferenceRule;
 use crate::{
-    graph::{parse_graph_string_into_actions, Graph},
+    graph::Graph,
     proof::{
         action::{Action, GraphTarget},
         error::{ProofError, ProofResult},
